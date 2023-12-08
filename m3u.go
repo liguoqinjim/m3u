@@ -31,6 +31,8 @@ type Track struct {
 	Length int
 	URI    string
 	Tags   []Tag
+
+	Origin string
 }
 
 type VariantStream struct {
@@ -84,6 +86,7 @@ func Parse(fileName string) (Playlist, error) {
 		onFirstLine = false
 
 		if strings.HasPrefix(line, "#EXTINF") {
+			origin := line
 			line := strings.Replace(line, "#EXTINF:", "", -1)
 			trackInfo := strings.Split(line, ",")
 			if len(trackInfo) < 2 {
@@ -95,6 +98,7 @@ func Parse(fileName string) (Playlist, error) {
 				return Playlist{}, errors.New("unable to parse length")
 			}
 			track := &Track{strings.Trim(trackInfo[1], " "), length, "", nil}
+			track.Origin = origin
 			tagList := tagsRegExp.FindAllString(line, -1)
 			for i := range tagList {
 				tagInfo := strings.Split(tagList[i], "=")
