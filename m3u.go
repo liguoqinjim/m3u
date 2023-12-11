@@ -202,6 +202,7 @@ func Marshall(p Playlist) (io.Reader, error) {
 // MarshallInto a *bufio.Writer a Playlist.
 func MarshallInto(p Playlist, into *bufio.Writer) error {
 	into.WriteString("#EXTM3U\n")
+	into.WriteString(fmt.Sprintf("#EXT-LI-NUM %d\n\n", len(p.Tracks)))
 	for _, track := range p.Tracks {
 		into.WriteString(track.Origin)
 		into.WriteString(fmt.Sprintf("\n%s\n", track.URI))
